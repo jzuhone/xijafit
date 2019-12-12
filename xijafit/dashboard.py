@@ -121,6 +121,7 @@ def dashboard(prediction, tlm, times, limits, modelname='PSMC', msid='1pdeaat',
     Note: prediction, tlm, and times must all have the same number of values.
 
     """
+    from numpy.random import RandomState
 
     # Set some plot characteristic default values
     # matplotlib.rcParams['xtick.major.pad'] = 10
@@ -322,7 +323,9 @@ def dashboard(prediction, tlm, times, limits, modelname='PSMC', msid='1pdeaat',
     # band is the mean difference between counts in telemetry (resolution).
     band = np.abs(np.diff(tlm))
     band = np.mean(band[band > 0]) / 2
-    noise = np.random.uniform(-band, band, len(tlm))
+    prng = RandomState(42)
+
+    noise = prng.uniform(-band, band, len(tlm))
 
     ax3 = fig.add_axes([0.62, 0.38, 0.36, 0.50], frameon=True)
     ax3.plot(error, tlm + noise, 'o', color='#386cb0', alpha=1, markersize=2, markeredgecolor='#386cb0')
